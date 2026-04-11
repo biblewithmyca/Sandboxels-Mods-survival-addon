@@ -3590,7 +3590,7 @@ runAfterLoad(() => {
 const oldTryMove = tryMove
 tryMove = function(...args){
     let pixel = args[0]
-    if (eLists.UNMOVABLE[elements[pixel].id]){return false} else{
+    if (eLists.UNMOVABLE[elements[pixel.element].id]){return false} else{
         return oldTryMove.apply(undefined, args)
     }
 }
