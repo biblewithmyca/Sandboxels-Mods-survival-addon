@@ -3645,7 +3645,7 @@ elements.instant_wire = {
         let hsv = RGBtoHSV(rgb[0], rgb[1], rgb[2])
         if (!pixel.iCharge){hsv.v *= 0.3}
         let rgb2 = HSVtoRGB(hsv.h, hsv.s, hsv.v)
-        let hex = RGBToHex(rgb2.r, rgb2.g, rgb2,b)
+        let hex = RGBToHex(rgb2)
         drawSquare(ctx, hex, pixel.x, pixel.y)
     },
     updateOrder: 203847
