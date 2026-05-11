@@ -1,11 +1,8 @@
 // Bismuth is the best element
 /*
-X heat conducting wall
-X aerogel (?)
 X rename global heat conductor to heat portal, add channels
 X instant wire
 X heat pipe, smart variant
-X rename specific machines to smart machines
 */
 async function _nousersthingsprompt(message, defaultValue = "") { // thanks to ggod for updated prompt function
     return new Promise(resolve => {
@@ -3346,7 +3343,7 @@ elements.e_void = {
                 if (!isEmpty(x, y, true)){
                     let otherPixel = pixelMap[x][y]
                     if (typeof pixel.filter != "undefined"){
-                        if(isElementInProperty(otherPixel.element, pixel.filter)){deletePixel(otherPixel.x, otherPixel.y)}
+                        if(isElementInProperty(otherPixel.element, pixel.filter) && pixel.element != otherPixel.element){deletePixel(otherPixel.x, otherPixel.y)}
                     } else if (!elements.e_void.ignore.includes(otherPixel.element)){deletePixel(otherPixel.x, otherPixel.y)}
                 }
             }
@@ -3674,6 +3671,58 @@ elements.instant_wire_junction = {
             }
             if (elements[spreadPixel.element].conduct && !spreadPixel.chargeCD && !spreadPixel.charge){
                 chargePixel(spreadPixel)
+            }
+        }
+    }
+}
+elements.iwifi_transmitter = {
+    color: "#85ec8e",
+    iConduct: 1,
+    name: "iWiFi Transmitter",
+    behavior: behaviors.WALL,
+    properties: {lastCharge:0},
+    onSelect: async function(){
+        let ans = await _nousersthingsprompt("What should the channel of this transmitter be?", 0)
+        if (typeof ans != "undefined"){
+            currentElementProp = {channel:ans}
+        }
+    },
+    iCharge: function(pixel, otherPixel){
+        let wifipixels = currentPixels.filter(function(pixelToCheck) {
+            if (pixelToCheck.element == "iwifi_receiver" && pixelToCheck.channel == pixel.channel){
+                return true;
+            }
+        })
+        for (let i = 0; i < wifipixels.length; i++) {
+            let newPixel = wifipixels[i];
+            elements[newPixel.element].iCharge(newPixel, pixel)
+        }
+    }
+}
+elements.iwifi_receiver = {
+    color: "#b4db6a",
+    iConduct: 1,
+    name: "iWiFi Receiver",
+    behavior: behaviors.WALL,
+    properties: {lastCharge:0},
+    onSelect: async function(){
+        let ans = await _nousersthingsprompt("What should the channel of this transmitter be?", 0)
+        if (typeof ans != "undefined"){
+            currentElementProp = {channel:ans}
+        }
+    },
+    iCharge: function(pixel, otherPixel){
+        for (let i of adjacentCoords){
+            let x = pixel.x + i[0]
+            let y = pixel.y + i[1]
+            if (!isEmpty(x, y, true)){
+                let spreadPixel = pixelMap[x][y]
+                if (elements[spreadPixel.element].iConduct){
+                    elements[spreadPixel.element].iCharge(spreadPixel, pixel)
+                }
+                if (elements[spreadPixel.element].conduct && !spreadPixel.chargeCD && !spreadPixel.charge){
+                    chargePixel(spreadPixel)
+                }
             }
         }
     }
