@@ -65,23 +65,32 @@ function moveHuman(body){
 		}
 	}
 	
-	let obj = findClosest(body, "water");
-	if(obj != null && obj.dir[0] == dir[0]){
-		let waterPx = getPixel(obj.pixel.x, obj.pixel.y-1);
-		if(waterPx != null && waterPx.element == "water"){
-			dir[0] *= -1;
+	let nextPx = getPixel(body.x+body.dir[0], body.y);
+	let num = 1;
+	while(nextPx == null && !outOfBounds(body.x+body.dir[0], body.y+num)){
+		nextPx = getPixel(body.x+body.dir[0], body.y+num);
+		num++;
+	}
+	if(nextPx != null && nextPx.element == "water"){
+		let pxBelow = getPixel(nextPx.x, nextPx.y+1);
+		if(pxBelow != null && pxBelow.element == "water"){
+			body.dir[0] *= -1;
 		}
 	}
 	
 	body.dir = dir;
 	if(Math.random() < (0.15+body.panic/15)){
-		if(Math.random() < (0.2)*(1-chance)){
-			dir[0] *= -1;
-		}
 		if((isEmpty(x+dir[0], y-1) && !outOfBounds(x+dir[0], y-1)) && tryMove(body, x+dir[0], y)){
 			if((head != undefined) && !tryMove(head, x+dir[0], y-1) && body.deathCD == undefined){
 				body.deathCD = 20;
 			}
+		} else if((isEmpty(x+dir[0], y-2) && !outOfBounds(x+dir[0], y-2)) && tryMove(body, x+dir[0], y-1)){
+			if((head != undefined) && !tryMove(head, x+dir[0], y-2) && body.deathCD == undefined){
+				body.deathCD = 20;
+			}
+		}
+		if(Math.random() < (0.2)*(1-chance)){
+			dir[0] *= -1;
 		}
 	}
 	
@@ -107,9 +116,9 @@ elements.body = {
 	pickElement: "human",
 	tick: function(p){
 		if(p.start == pixelTicks+3){
-			p.aggr = (Math.random < 0.15);
+			p.aggr = (Math.random() < 0.15);
 		}
-		if(p.deathCD != undefined && p.deathCD > 0){
+		if(p.deathCD != undefined && p.deathCD > 0 && Math.random() < 0.25){
 			p.deathCD -= 1;
 		} 
 		if(p.deathCD == 0){
@@ -122,14 +131,14 @@ elements.body = {
 		}
 		
 		
-		if(p.dead && Math.random() < 0.15){
+		if(p.dead && Math.random() < 0.015){
 			changePixel(p, "rotten_meat");
 		}
 		moveHuman(p);
 		if(p.health < 0) p.dead = true;
 		if(p.health > 0 && p.health < 100){
 			p.health += (Math.random() < 0.25) ? 5 : 0;
-			p.panic = 15*((100-p.health)/100);
+			p.panic = Math.min(20, p.panic + 0.7*((100-p.health)/100));
 		}
 		if (p.temp > 37) { p.temp -= 1; }
 		else if (p.temp < 37) { p.temp += 1; }
@@ -153,8 +162,13 @@ elements.body = {
 			}
 		}
 		
+		if(p.panic > 0){
+			p.panic = (Math.max(0, p.panic - 0.2));
+		}
+		
 		if(p.burning && Math.random()< 0.25){
 			p.health -= 5;
+			p.panic = Math.min(20, p.panic + 0.5);
 		}
 		
 	},

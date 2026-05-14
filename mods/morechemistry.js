@@ -1,8 +1,11 @@
 /*
-*Version 2.2.2
+* Version 2.2.2
 */
 
+console.log("depenency issue");
 dependOn("orchidslibrary.js", ()=>{
+	console.log("script issue");
+	elements.acid.ignore = elements.acid.ignore.concat(["nitric_acid", "aqua_regia", "nitrogen_dioxide", "nitric_acid_ice", "nitrogen_dioxide_ice", "acid", "chloroauric_acid", "*chloride", "*carbonate", "*acetate", "*sulfate", "*gallium", "*hydroxide", "salt", "*aluminum", "target_portal_in", "*magnesium", "*copper*", "*iron", "*calcium", "sulfuric_acid", "*vinegar", "*gypsum", "*wall", "epsom_salt", "platinum", "chloroplatinic_acid", "*sulfur*", "wall", "porcelain", "plastic", "glass", "*sulfate", "*nitrate", "liquid_sulfur_trioxide", "sulfur_trioxide"]);
     elements.cloner.keyInput = "str:clone", elements.ecloner.keyInput = "str:clone", elements.slow_cloner.keyInput = "str:clone", elements.floating_cloner.keyInput = "str:clone";
     let xDown = false;
     elements.copper_sulfate.reactions = {
@@ -76,7 +79,7 @@ dependOn("orchidslibrary.js", ()=>{
             }
         }
     }
-    elements.water.ignore = ["copper_sulphate"], elements.steam.ignore = ["copper_sulphate"], elements.pool_water.ignore = ["copper_sulphate", 'pool_ice'], elements.salt_water.ignore = ["copper_sulphate", 'salt_ice'], elements.sugar_water.ignore = ["copper_sulphate", 'sugar_ice'], elements.seltzer.ignore = ["copper_sulphate", 'seltzer_ice'],
+    elements.water.ignore = ["copper_sulfate"], elements.steam.ignore = ["copper_sulfate"], elements.pool_water.ignore = ["copper_sulfate", 'pool_ice'], elements.salt_water.ignore = ["copper_sulfate", 'salt_ice'], elements.sugar_water.ignore = ["copper_sulfate", 'sugar_ice'], elements.seltzer.ignore = ["copper_sulfate", 'seltzer_ice'],
     document.addEventListener("keydown", (e)=>{xDown = (e.key.toLowerCase() == "x") ? true : xDown;});
     document.addEventListener("keyup", (e)=>{xDown = (e.key.toLowerCase() == "x") ? false : xDown;});
     
@@ -715,7 +718,7 @@ dependOn("orchidslibrary.js", ()=>{
     }
     elements.acid.behavior = behaviors.LIQUID;
     elements.acid.tick = acidTick;
-    elements.acid.ignore = elements.acid.ignore.concat(["nitric_acid", "aqua_regia", "nitrogen_dioxide", "nitric_acid_ice", "nitrogen_dioxide_ice", "acid", "chloroauric_acid", "*chloride", "*carbonate", "*acetate", "*sulfate", "*gallium", "*hydroxide", "salt", "*aluminum", "target_portal_in", "*magnesium", "*copper*", "*iron", "*calcium", "sulfuric_acid", "*vinegar", "*gypsum", "*wall", "epsom_salt", "platinum", "chloroplatinic_acid", "*sulfur*", "wall", "porcelain", "plastic", "glass", "*sulfate", "*nitrate"]);
+    
     elements.nitric_acid = {
         alias: "HNO₃",
         behavior: behaviors.LIQUID,
@@ -1459,7 +1462,7 @@ dependOn("orchidslibrary.js", ()=>{
             tree_branch: {elem1: null, elem2: "wood"},
             fruit_vine: {elem1: null, elem2: "dead_plant"},
             low_fruit_vine: {elem1: null, elem2: "dead_plant"},
-            water: {elem1: null, elem2:"sulfuric_acid"},
+            water: {elem1: "sulfuric_acid", elem2:"sulfuric_acid"},
             quicklime: {elem1: null, elem2: "hardened_gypsum"},
             grass: {elem1: null, elem2: "dead_plant"},
             vine: {elem1: null, elem2: "dead_plant"},
