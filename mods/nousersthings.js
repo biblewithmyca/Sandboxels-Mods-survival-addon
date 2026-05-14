@@ -1,7 +1,6 @@
 // Bismuth is the best element
 /*
 X rename global heat conductor to heat portal, add channels
-X instant wire
 X heat pipe, smart variant
 */
 async function _nousersthingsprompt(message, defaultValue = "") { // thanks to ggod for updated prompt function
